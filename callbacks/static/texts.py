@@ -59,3 +59,40 @@ main_menu_markup = {
     'uz': "Asosiy sahifa:",
     'ru': "Главная страница:"
 }
+
+# Ask Me Markup Text
+amm_text = {
+    'uz': 'Kimga savol beramiz?',
+    'ru': 'Кому зададим вопрос?'
+}
+
+# Get Info Markup text
+gim_text = {
+    'uz': "Qaysi kurs haqida ma'lumot olishni hohlaysiz?",
+    'ru': 'Какой курс вас интересует?'
+}
+
+# Watch Video Markup text
+wvm_text = {
+    'uz': "Videolardan birini tanlang",
+    'ru': "Выберите один из видеороликов"
+}
+
+# Test Knowledge Markup text
+ptm_text = {
+    'uz': """🤓 Siz FORWARD SCHOOL test sinov bo'limidasiz!
+    
+🧠 Bu bo'limda ingiliz tili darajangizni sinab ko'rishingiz mumkin
+
+🔑 Testni boshlash uchun sizga maxsus <code>kod</code> kerak bo'ladi, uni maktabimiz administratorlaridan olishingiz mumkin""",
+    'ru': """🤓 Сейчас вы в разделе тестирования!
+
+🧠 Здесь вы можете проверить уровень своего английского языка
+
+🔑 Получите специальный <code>код</code> от администратора школы и проходите тест"""
+}
+
+settings_markup_text = {
+    'uz': "Sizga qanday yordam berishim mumkin?",
+    'ru': "Чем могу вам помочь?"
+}

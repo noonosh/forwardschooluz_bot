@@ -9,7 +9,7 @@ from telegram.ext import (
 
 from callbacks.mainpage import *
 from auth_configs import keys
-from callbacks import registration, starter
+from callbacks import registration, starter, kiosk, livegram, markups, section_settings
 from constants import *
 import logging
 from callbacks.static.button_texts import *
@@ -58,15 +58,60 @@ def main():
             REGISTRATION: [registration_conversation],
             MAIN_MENU: [
                 MessageHandler(Filters.regex(ASK_ME['uz']) |
-                               Filters.regex(ASK_ME['ru']), main_page),
+                               Filters.regex(ASK_ME['ru']), markups.ask_me_markup),
+
                 MessageHandler(Filters.regex(GET_INFO['uz']) |
-                               Filters.regex(GET_INFO['ru']), main_page),
+                               Filters.regex(GET_INFO['ru']), markups.get_info_markup),
+
                 MessageHandler(Filters.regex(WATCH_VIDEO['uz']) |
-                               Filters.regex(WATCH_VIDEO['ru']), main_page),
+                               Filters.regex(WATCH_VIDEO['ru']), markups.watch_video_markup),
+
                 MessageHandler(Filters.regex(TEST_KNOWLEDGE['uz']) |
-                               Filters.regex(TEST_KNOWLEDGE['ru']), main_page),
+                               Filters.regex(TEST_KNOWLEDGE['ru']), markups.placement_test_markup),
+
                 MessageHandler(Filters.regex(SETTINGS['uz']) |
-                               Filters.regex(SETTINGS['ru']), main_page)
+                               Filters.regex(SETTINGS['ru']), markups.settings_markup)
+            ],
+            I_HAVE_A_QUESTION: [
+                MessageHandler(Filters.regex(ASK_SUPPORT['uz']) |
+                               Filters.regex(ASK_SUPPORT['ru']) |
+                               Filters.regex(ASK_TEACHER['uz']) |
+                               Filters.regex(ASK_TEACHER['ru']) |
+                               Filters.regex(ASK_ADMINISTRATION['uz']) |
+                               Filters.regex(ASK_ADMINISTRATION['ru']) |
+                               Filters.regex(ASK_FINANCE['uz']) |
+                               Filters.regex(ASK_FINANCE['ru']), livegram.ask),
+
+                MessageHandler(Filters.regex(BACK['uz']) |
+                               Filters.regex(BACK['ru']), back_to_main)
+            ],
+            I_WANT_TO_GET_INFO: [
+                MessageHandler(Filters.regex(INTENSIVE_6['uz']) |
+                               Filters.regex(INTENSIVE_6['ru']) |
+                               Filters.regex(INTENSIVE_7['uz']) |
+                               Filters.regex(INTENSIVE_7['ru']) |
+                               Filters.regex(GENERAL_ENGLISH['uz']) |
+                               Filters.regex(GENERAL_ENGLISH['ru']) |
+                               Filters.regex(IELTS['uz']) |
+                               Filters.regex(IELTS['ru']), kiosk.give_information),
+
+                MessageHandler(Filters.regex(BACK['uz']) ^
+                               Filters.regex(BACK['ru']), back_to_main)
+                # MessageHandler(Filters.photo, get_photo_id)
+            ],
+            I_WANT_TO_WATCH: [
+                MessageHandler(Filters.regex(BACK['uz']) ^
+                               Filters.regex(BACK['ru']), back_to_main)
+            ],
+            I_WANT_A_TEST: [
+                MessageHandler(Filters.regex(BACK['uz']) ^
+                               Filters.regex(BACK['ru']), back_to_main)
+            ],
+            CONFIGURATIONS_PLEASE: [
+                MessageHandler(Filters.regex(CHANGE_LANG['uz']) |
+                               Filters.regex(CHANGE_LANG['ru']), section_settings.change_language),
+                MessageHandler(Filters.regex(BACK['uz']) |
+                               Filters.regex(BACK['ru']), back_to_main)
             ]
         },
         fallbacks=[

@@ -37,3 +37,33 @@ INTENSIVE_6, INTENSIVE_7, GENERAL_ENGLISH, IELTS = [
     {'uz': '📘 IELTS',
      'ru': '📘 IELTS'}
 ]
+ASK_SUPPORT, ASK_TEACHER, ASK_ADMINISTRATION, ASK_FINANCE = [
+    {'uz': "🎓 Academic Support'ga savol berish",
+     'ru': "🎓 Задать вопрос Academic Support"},
+    {'uz': '🧑‍🏫 Ustozlarga savol berish',
+     'ru': '🧑‍🏫 Задать вопрос учителю'},
+    {'uz': '📄 Administratsiyaga savol berish',
+     'ru': '📄 Задать вопрос администрации'},
+    {'uz': "💸 Moliya bo'limiga savol yo'llash",
+     'ru': '💸 Задать вопрос финансисту'},
+]
+
+VIDEO_1, VIDEO_2, VIDEO_3 = (
+    {'uz': '💣 Promo rolik',
+     'ru': '💣 Промо-ролик'},
+    {'uz': '💡 Masterklass',
+     'ru': '💡 Мастеркласс'},
+    {'uz': '📹 Video dars',
+     'ru': '📹 Видео урок'}
+)
+
+CHANGE_LANG = {'uz': "🇺🇿➡️️🇷🇺 Tilni o'zgartirish",
+               'ru': '🇷🇺➡️🇺🇿 Поменять язык'}
+
+
+QUIZ_START, READY = [
+    {'uz': "🎒 Menda kod bor",
+     'ru': "🎒 У меня есть код"},
+    {'uz': "Tayyorman 🚩",
+     'ru': 'Готов 🚩'}
+]
