@@ -7,12 +7,11 @@ from telegram.ext import (
     Filters
 )
 
-import constants
+from callbacks.mainpage import *
 from auth_configs import keys
 from callbacks import registration, starter
 from constants import *
 import logging
-from callbacks.static.texts import *
 from callbacks.static.button_texts import *
 
 logging.basicConfig(level=logging.DEBUG,
@@ -25,21 +24,27 @@ def main():
     dispatcher = updater.dispatcher
 
     registration_conversation = ConversationHandler(
-        entry_points=[CallbackQueryHandler(registration.greet_user),
+        entry_points=[CallbackQueryHandler(pattern='uz', callback=registration.greet_user),
+                      CallbackQueryHandler(pattern='ru', callback=registration.greet_user),
                       MessageHandler(Filters.text, registration.greet_user)],
         states={
             PHONE_CONFIRMATION: [
                 MessageHandler(Filters.contact | Filters.text, registration.check_phone)
             ],
-            PHONE_CODE: {
+            PHONE_CODE: [
                 MessageHandler(Filters.regex('^' + RESEND_CODE['uz'] + '$') |
                                Filters.regex('^' + RESEND_CODE['ru'] + '$'),
-                               registration.check_code),
+                               registration.resend_code),
+
                 MessageHandler(Filters.regex('^' + CHANGE_NUMBER['uz'] + '$') |
                                Filters.regex('^' + CHANGE_NUMBER['ru'] + '$'),
-                               registration.check_code),
+                               registration.request_phone),
+
                 MessageHandler(Filters.text, registration.check_code)
-            }
+            ],
+            NAME_INPUT: [
+                MessageHandler(Filters.text, registration.name_accept)
+            ]
         },
         fallbacks=[],
         map_to_parent={
@@ -50,7 +55,19 @@ def main():
     conversation_main = ConversationHandler(
         entry_points=[CommandHandler('start', starter.start)],
         states={
-            REGISTRATION: [registration_conversation]
+            REGISTRATION: [registration_conversation],
+            MAIN_MENU: [
+                MessageHandler(Filters.regex(ASK_ME['uz']) |
+                               Filters.regex(ASK_ME['ru']), main_page),
+                MessageHandler(Filters.regex(GET_INFO['uz']) |
+                               Filters.regex(GET_INFO['ru']), main_page),
+                MessageHandler(Filters.regex(WATCH_VIDEO['uz']) |
+                               Filters.regex(WATCH_VIDEO['ru']), main_page),
+                MessageHandler(Filters.regex(TEST_KNOWLEDGE['uz']) |
+                               Filters.regex(TEST_KNOWLEDGE['ru']), main_page),
+                MessageHandler(Filters.regex(SETTINGS['uz']) |
+                               Filters.regex(SETTINGS['ru']), main_page)
+            ]
         },
         fallbacks=[
 

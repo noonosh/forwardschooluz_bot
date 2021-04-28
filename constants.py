@@ -2,7 +2,7 @@
 # Top Level states
 REGISTRATION, MAIN_MENU = range(2)
 # Second level states
-LANGUAGE, PHONE_CONFIRMATION, PHONE_CODE, REG_END = map(chr, range(4))
+LANGUAGE, PHONE_CONFIRMATION, PHONE_CODE, NAME_INPUT, REG_END = range(2, 7)
 
 
 # States of the user defined below

@@ -11,3 +11,29 @@ RESEND_CODE, CHANGE_NUMBER = (
     {'uz': "Telefon raqamni o'zgartirish",
      'ru': 'Поменять номер телефона'}
 )
+
+ASK_ME, GET_INFO, WATCH_VIDEO, TEST_KNOWLEDGE, SETTINGS = [
+    {'uz': "🙋‍ Savol bor",
+     'ru': '🙋‍ Есть вопрос'},
+    {'uz': "ℹ️ Ma'lumot olish",
+     'ru': 'ℹ️ Получить инфо'},
+    {'uz': "🎥 Video ko'rish",
+     'ru': '🎥 Смотреть видео'},
+    {'uz': "✏️ Placement Test",
+     'ru': "✏️ Placement Test"},
+    {'uz': "⚙️ Sozlamalar",
+     'ru': "⚙️ Настройки"}
+]
+
+BACK = {'uz': '⏪ Orqaga', 'ru': '⏪ Назад'}
+
+INTENSIVE_6, INTENSIVE_7, GENERAL_ENGLISH, IELTS = [
+    {'uz': "📕 INTENSIVE ENGLISH 6",
+     'ru': "📕 INTENSIVE ENGLISH 6"},
+    {'uz': "📗 INTENSIVE ENGLISH 7",
+     'ru': "📗 INTENSIVE ENGLISH 7"},
+    {'uz': '📙 GENERAL ENGLISH',
+     'ru': '📙 GENERAL ENGLISH'},
+    {'uz': '📘 IELTS',
+     'ru': '📘 IELTS'}
+]

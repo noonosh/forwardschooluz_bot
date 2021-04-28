@@ -16,8 +16,8 @@ def select_id(update):
 
 
 def select_state(update):
-    a = db.cursor.execute("SELECT status FROM Users WHERE id = '{}'".format(select_id(update))).fetchone()[0]
-    return a
+    a = db.cursor.execute("SELECT status FROM Users WHERE id = '{}'".format(select_id(update))).fetchone()
+    return a[0]
 
 
 def lang(update):

@@ -1,5 +1,5 @@
 from databases import database_connector as db, select
-from callbacks import registration
+from callbacks import registration, mainpage
 from constants import *
 
 
@@ -31,13 +31,16 @@ def start(update, context):
             registration.choose_language(update, context)
             return REGISTRATION
         else:
-            if select.select_state != ACTIVE_USER:
+            status = db.cursor.execute("SELECT status FROM Users WHERE id = '{}'"
+                                       .format(select.select_id(update))).fetchone()
+            if status[0] != ACTIVE_USER:
                 db.cursor.execute("DELETE FROM Users WHERE id = '{}'".format(select.select_id(update)))
                 db.conn.commit()
                 start(update, context)
                 return REGISTRATION
-            elif select.select_state == ACTIVE_USER:
-                pass  # MAIN PAGE
+            elif status[0] == ACTIVE_USER:
+                mainpage.main_page(update, context)
+                return MAIN_MENU
 
     else:
         raise Exception("No telegram ID was determined during the update.")
