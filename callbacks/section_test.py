@@ -1,15 +1,14 @@
 import time
-from datetime import datetime
 from callbacks.static.texts import quiz_password_txt, text_quiz_instructions, quiz_finished_text, \
     quiz_thank_you
-from constants import TEST_AUTH, MAIN_MENU, TEST_PROCESS, TEST_OVERVIEW_STATE, TEST_READY_STATE
+from constants import MAIN_MENU, TEST_PROCESS, TEST_OVERVIEW_STATE, TEST_READY_STATE
 from user_settings import QUIZ_PASSWORD
 from callbacks.mainpage import main_page
 from databases.select import lang
 from databases.database_connector import *
 from telegram import (ReplyKeyboardRemove, InlineKeyboardButton, InlineKeyboardMarkup, Poll,
                       ReplyKeyboardMarkup, ChatAction)
-from telegram.ext import CallbackContext
+from telegram.ext import CallbackContext, ConversationHandler
 from callbacks.static.button_texts import READY, SUBMIT_QUIZ_RESULTS
 from callbacks.static.quiz_answers import *
 
@@ -17,7 +16,7 @@ from callbacks.static.quiz_answers import *
 def test_key(update, context):
     update.effective_message.reply_text(quiz_password_txt['request'][lang(update)],
                                         reply_markup=ReplyKeyboardRemove())
-    return TEST_AUTH
+    return TEST_READY_STATE
 
 
 def check_key(update, context):
@@ -26,7 +25,7 @@ def check_key(update, context):
     if message.text == QUIZ_PASSWORD:
         update.effective_message.reply_text(quiz_password_txt['confirm'][lang(update)])
         quiz_instructions(update, context)
-        return TEST_READY_STATE
+        return ConversationHandler.END
     else:
         update.effective_message.reply_text(quiz_password_txt['reject'][lang(update)])
         main_page(update, context)
@@ -102,8 +101,7 @@ def send_questions(update, context):
                                     ],
                                     type=Poll.QUIZ,
                                     correct_option_id=answers[n],
-                                    is_anonymous=False,
-                                    open_period=30)
+                                    is_anonymous=False)
 
         payload = {
             update.effective_chat.id: msg.poll.id
@@ -149,7 +147,6 @@ def send_questions(update, context):
                 }
 
                 context.user_data.update(payload)
-                print(context.user_data)
             else:
                 current = context.user_data['questions_answered'] + 1
                 context.user_data.update(
@@ -166,7 +163,7 @@ def send_questions(update, context):
                 else:
                     pass
                 close_quiz(update, context)
-                return TEST_OVERVIEW_STATE
+                return ConversationHandler.END
         else:
             pass
 
@@ -202,7 +199,7 @@ def close_quiz(update, context: CallbackContext):
                                caption=text.format(score, "BEGINNER"),
                                reply_markup=markup,
                                parse_mode='HTML')
-    elif 16 < int(score) <= 24:
+    elif 16 <= int(score) <= 24:
         context.bot.send_chat_action(chat_id=user,
                                      action=ChatAction.UPLOAD_PHOTO)
         context.bot.send_photo(chat_id=user,
@@ -210,7 +207,7 @@ def close_quiz(update, context: CallbackContext):
                                caption=text.format(score, "ELEMENTARY"),
                                reply_markup=markup,
                                parse_mode='HTML')
-    elif 25 < int(score) <= 32:
+    elif 25 <= int(score) <= 32:
         context.bot.send_chat_action(chat_id=user,
                                      action=ChatAction.UPLOAD_PHOTO)
         context.bot.send_photo(chat_id=user,
@@ -218,7 +215,7 @@ def close_quiz(update, context: CallbackContext):
                                caption=text.format(score, "PRE-INTERMEDIATE"),
                                reply_markup=markup,
                                parse_mode='HTML')
-    elif 33 < int(score) <= 39:
+    elif 33 <= int(score) <= 39:
         context.bot.send_chat_action(chat_id=user,
                                      action=ChatAction.UPLOAD_PHOTO)
         context.bot.send_photo(chat_id=user,
@@ -226,7 +223,7 @@ def close_quiz(update, context: CallbackContext):
                                caption=text.format(score, "INTERMEDIATE"),
                                reply_markup=markup,
                                parse_mode='HTML')
-    elif 40 < int(score) <= 45:
+    elif 40 <= int(score) <= 45:
         context.bot.send_chat_action(chat_id=user,
                                      action=ChatAction.UPLOAD_PHOTO)
         context.bot.send_photo(chat_id=user,

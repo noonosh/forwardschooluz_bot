@@ -2,8 +2,11 @@ from user_settings import *
 from databases.select import lang
 from callbacks.static.texts import intensive_6_txt, intensive_7_txt, general_english_txt, ielts_txt
 from callbacks.mainpage import back_to_main
+from presets.actions import send_action
+from telegram import ChatAction
 
 
+@send_action(ChatAction.UPLOAD_PHOTO)
 def intensive_6(update, context):
     telegram_id = update.message.chat_id
     context.bot.send_photo(chat_id=telegram_id,
@@ -11,6 +14,7 @@ def intensive_6(update, context):
     update.message.reply_html(intensive_6_txt[lang(update)])
 
 
+@send_action(ChatAction.UPLOAD_PHOTO)
 def intensive_7(update, context):
     telegram_id = update.message.chat_id
     context.bot.send_photo(chat_id=telegram_id,
@@ -18,6 +22,7 @@ def intensive_7(update, context):
     update.message.reply_html(intensive_7_txt[lang(update)])
 
 
+@send_action(ChatAction.UPLOAD_PHOTO)
 def general(update, context):
     telegram_id = update.message.chat_id
     context.bot.send_photo(chat_id=telegram_id,
@@ -25,6 +30,7 @@ def general(update, context):
     update.message.reply_html(general_english_txt[lang(update)])
 
 
+@send_action(ChatAction.UPLOAD_PHOTO)
 def ielts(update, context):
     telegram_id = update.message.chat_id
     context.bot.send_photo(chat_id=telegram_id,

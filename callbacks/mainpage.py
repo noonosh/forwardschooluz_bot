@@ -1,5 +1,4 @@
-from telegram.ext import CallbackContext
-from telegram import ReplyKeyboardMarkup
+from telegram import ReplyKeyboardMarkup, ChatAction
 from callbacks.static.button_texts import *
 from callbacks.static.texts import *
 from databases.select import lang

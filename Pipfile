@@ -8,6 +8,8 @@ python-telegram-bot = "*"
 requests = "*"
 mysql-connector-python = "*"
 ujson = "*"
+install = "*"
+pip = "*"
 
 [dev-packages]
 

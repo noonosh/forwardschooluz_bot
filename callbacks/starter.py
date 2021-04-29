@@ -7,7 +7,8 @@ def start(update, context):
     user = update.message.chat
     full_name = update.message.from_user.full_name
     if user.id < 0:
-        pass  # in GROUP
+        update.message.reply_text("Бот активен!")
+        return RESPONSE_GROUP  # in GROUP
     elif user.id > 0:
         if len(select.select_all(update)) == 0:
             db.cursor.execute("""INSERT INTO Users (
@@ -45,3 +46,16 @@ def start(update, context):
 
     else:
         raise Exception("No telegram ID was determined during the update.")
+
+
+def group_authenticate(update, context):
+    update.message.reply_text(
+        'Активируйте бота с помощью /start чтобы отвечать на сообщения пользователей')
+
+
+def reset(update, context):
+    if update.effective_chat.id > 0:
+        mainpage.main_page(update, context)
+        return MAIN_MENU
+    else:
+        pass

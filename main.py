@@ -6,8 +6,8 @@ from telegram.ext import (
     MessageHandler,
     Filters,
     PollAnswerHandler,
-    PollHandler
 )
+from ptbcontrib.reply_to_message_filter import ReplyToMessageFilter
 
 from callbacks.mainpage import *
 from auth_configs import keys
@@ -56,34 +56,25 @@ def main():
         }
     )
 
-    placement_test_conversation = ConversationHandler(
-        entry_points=[MessageHandler(Filters.regex(I_HAVE_KEY['uz']) |
-                                     Filters.regex(I_HAVE_KEY['ru']), section_test.test_key)],
+    quiz_conversation = ConversationHandler(
+        entry_points=[CallbackQueryHandler(section_test.quiz_getting_started, pattern='start_that_quiz')],
         states={
-            TEST_AUTH: [
-                MessageHandler(Filters.text, section_test.check_key)
-            ],
-            TEST_READY_STATE: [
-                CallbackQueryHandler(section_test.quiz_getting_started, pattern='start_that_quiz')
-            ],
             TEST_PROCESS: [
                 PollAnswerHandler(section_test.send_questions)
-            ],
-            TEST_OVERVIEW_STATE: [
-                MessageHandler(Filters.regex(SUBMIT_QUIZ_RESULTS['uz']) |
-                               Filters.regex(SUBMIT_QUIZ_RESULTS['ru']), section_test.completed_quiz)
             ]
         },
         fallbacks=[],
-        per_chat=False,
-        map_to_parent={
-            MAIN_MENU: MAIN_MENU
-        }
+        per_chat=False
     )
 
     conversation_main = ConversationHandler(
-        entry_points=[CommandHandler('start', starter.start)],
+        entry_points=[CommandHandler('start', starter.start),
+                      MessageHandler(Filters.regex(SUBMIT_QUIZ_RESULTS['uz']) |
+                                     Filters.regex(SUBMIT_QUIZ_RESULTS['ru']), section_test.completed_quiz)],
         states={
+            RESPONSE_GROUP: [
+                MessageHandler(ReplyToMessageFilter(Filters.user(1148622134)), livegram.reply_to_user)
+            ],
             REGISTRATION: [registration_conversation],
             MAIN_MENU: [
                 MessageHandler(Filters.regex(ASK_ME['uz']) |
@@ -112,7 +103,16 @@ def main():
                                Filters.regex(ASK_FINANCE['ru']), livegram.ask),
 
                 MessageHandler(Filters.regex(BACK['uz']) |
-                               Filters.regex(BACK['ru']), back_to_main)
+                               Filters.regex(BACK['ru']), main_page)
+            ],
+            ASKING: [
+                MessageHandler(Filters.regex(BACK['uz']) |
+                               Filters.regex(BACK['ru']), markups.ask_me_markup),
+                MessageHandler(Filters.text |
+                               Filters.photo |
+                               Filters.voice |
+                               Filters.audio |
+                               Filters.document, livegram.forward)
             ],
             I_WANT_TO_GET_INFO: [
                 MessageHandler(
@@ -129,17 +129,22 @@ def main():
                     Filters.regex(IELTS['ru']), kiosk.ielts),
 
                 MessageHandler(Filters.regex(BACK['uz']) |
-                               Filters.regex(BACK['ru']), back_to_main)
-                # MessageHandler(Filters.photo, get_photo_id)
+                               Filters.regex(BACK['ru']), back_to_main),
+
+                MessageHandler(Filters.photo, kiosk.get_photo_id)
             ],
             I_WANT_TO_WATCH: [
                 MessageHandler(Filters.regex(BACK['uz']) |
                                Filters.regex(BACK['ru']), back_to_main)
             ],
             I_WANT_A_TEST: [
-                placement_test_conversation,
+                MessageHandler(Filters.regex(I_HAVE_KEY['uz']) |
+                               Filters.regex(I_HAVE_KEY['ru']), section_test.test_key),
                 MessageHandler(Filters.regex(BACK['uz']) |
                                Filters.regex(BACK['ru']), back_to_main)
+            ],
+            TEST_READY_STATE: [
+                MessageHandler(Filters.text, section_test.check_key)
             ],
             CONFIGURATIONS_PLEASE: [
                 MessageHandler(Filters.regex(CHANGE_LANG['uz']) |
@@ -149,12 +154,14 @@ def main():
             ]
         },
         fallbacks=[
-
-        ],
-        per_chat=False
+            MessageHandler(Filters.all & (~ Filters.user(1148622134)), starter.reset),
+            CommandHandler('reset', starter.reset)
+        ]
     )
 
     dispatcher.add_handler(conversation_main)
+    dispatcher.add_handler(quiz_conversation)
+    dispatcher.add_handler(MessageHandler(ReplyToMessageFilter(Filters.user(1148622134)), starter.group_authenticate))
 
     updater.start_polling()
     updater.idle()

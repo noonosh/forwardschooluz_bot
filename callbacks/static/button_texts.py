@@ -38,13 +38,13 @@ INTENSIVE_6, INTENSIVE_7, GENERAL_ENGLISH, IELTS = [
      'ru': '📘 IELTS'}
 ]
 ASK_SUPPORT, ASK_TEACHER, ASK_ADMINISTRATION, ASK_FINANCE = [
-    {'uz': "🎓 Academic Support'ga savol berish",
+    {'uz': "🎓 Academic Supportga savol berish",
      'ru': "🎓 Задать вопрос Academic Support"},
     {'uz': '🧑‍🏫 Ustozlarga savol berish',
      'ru': '🧑‍🏫 Задать вопрос учителю'},
     {'uz': '📄 Administratsiyaga savol berish',
      'ru': '📄 Задать вопрос администрации'},
-    {'uz': "💸 Moliya bo'limiga savol yo'llash",
+    {'uz': "💸 Moliyachiga savol",
      'ru': '💸 Задать вопрос финансисту'},
 ]
 

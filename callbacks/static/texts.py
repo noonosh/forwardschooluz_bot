@@ -289,3 +289,72 @@ ielts_txt = {
 
 📑 Также 2 раза в месяц для вас будут проводиться Mock экзамены"""
 }
+
+ask_support_got = {
+    'uz': "Qabul qildik! Academic Support siz bilan bog'lanadi",
+    'ru': "Приняли! Academic Support с вами свяжется"
+}
+ask_teachers_got = {
+    'uz': "Qabul qildik! O'qituvchilarimiz siz bilan bog'lanadi",
+    'ru': 'Приняли! Учителя с вами свяжутся'
+}
+ask_administration_got = {
+    'uz': "Qabul qildik! Administratsiya siz bilan bog'lanadi",
+    'ru': 'Приняли! Администрация с вами свяжется'
+}
+
+ask_finance_got = {
+    'uz': "Qabul qildik! Moliya bo'limi siz bilan bog'lanadi",
+    'ru': 'Приняли! Финансовый отдел с вами свяжется'
+}
+
+asking_texts = {
+    -1001361079718: {
+        'uz': 'bla bla',
+        'ru': 'russish bla bla'
+    },
+    -1001221591327: {
+        'uz': "Academic Supportga o'z murojaatingizni yuboring😊",
+        'ru': "Отправьте свой запрос нашему Academic Support😊"
+    },
+    -1001352926506: {
+        'uz': "O'qituvchilarimizga o'z murojaatingizni yuboring😊",
+        'ru': "Отправьте свой запрос нашим учителям😊"
+    },
+    -1001312359770: {
+        'uz': "Administratorlarimizga o'z murojaatingizni yuboring😊",
+        'ru': "Отправьте свой запрос нашим администраторам😊"
+    },
+    -1001393166508: {
+        'uz': "Moliya bo'limi ma'sullarimizga o'z murojaatingizni yuboring😊",
+        'ru': "Отправьте свой запрос нашим финансистам😊"
+    }
+}
+
+gotcha_texts = {
+    -1001361079718: {
+        'uz': 'bla bla',
+        'ru': 'russish bla bla'
+    },
+    -1001221591327: {
+        'uz': "Qabul qildim. Academic Support guruhiga yubordim ;)",
+        'ru': "Принял. Отправил в группу Academic Support ;)"
+    },
+    -1001352926506: {
+        'uz': "Qabul qildim. O'qituvchilarimizga yubordim ;)",
+        'ru': "Принял. Отправил в группу учителей ;)"
+    },
+    -1001312359770: {
+        'uz': "Qabul qildim. Administratorlarimizga yubordim ;)",
+        'ru': "Принял. Отправил в группу администраторов ;)"
+    },
+    -1001393166508: {
+        'uz': "Qabul qildim. Moliyachilarimizga yubordim ;)",
+        'ru': "Принял. Отправил в группу финансистов ;)"
+    }
+}
+
+txt_reply = {
+    'uz': "🔔 Yangi xabar!\n\n<b>{}</b>",
+    'ru': "🔔 Новое уведомление!\n\n<b>{}</b>"
+}

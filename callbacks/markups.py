@@ -1,6 +1,7 @@
 from constants import *
 from callbacks.static.button_texts import *
-from telegram import ReplyKeyboardMarkup, InlineKeyboardMarkup, InlineKeyboardButton
+from telegram import ReplyKeyboardMarkup
+from telegram.ext import ConversationHandler
 from databases.select import lang
 from callbacks.static.texts import amm_text, gim_text, wvm_text, ptm_text, settings_markup_text
 
