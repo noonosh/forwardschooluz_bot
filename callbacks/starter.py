@@ -5,6 +5,7 @@ from constants import *
 
 def start(update, context):
     user = update.message.chat
+    full_name = update.message.from_user.full_name
     if user.id < 0:
         pass  # in GROUP
     elif user.id > 0:
@@ -24,7 +25,7 @@ def start(update, context):
             NULL,
             '{}')""".format(
                 user.id,
-                user.first_name + ' ' + user.last_name,
+                full_name,
                 user.username,
                 NEW_USER))
             db.conn.commit()

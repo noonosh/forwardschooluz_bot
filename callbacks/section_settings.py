@@ -5,11 +5,12 @@ from constants import MAIN_MENU
 
 
 def change_language(update, context):
+    print(lang(update))
     if lang(update) == 'uz':
         cursor.execute(
             "UPDATE Users SET language = 'ru' WHERE id = '{}'".format(select_id(update)))
         conn.commit()
-    if lang(update) == 'ru':
+    elif lang(update) == 'ru':
         cursor.execute(
             "UPDATE Users SET language = 'uz' WHERE id = '{}'".format(select_id(update)))
         conn.commit()

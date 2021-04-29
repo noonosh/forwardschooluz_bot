@@ -61,9 +61,11 @@ CHANGE_LANG = {'uz': "🇺🇿➡️️🇷🇺 Tilni o'zgartirish",
                'ru': '🇷🇺➡️🇺🇿 Поменять язык'}
 
 
-QUIZ_START, READY = [
+I_HAVE_KEY, READY, SUBMIT_QUIZ_RESULTS = [
     {'uz': "🎒 Menda kod bor",
      'ru': "🎒 У меня есть код"},
     {'uz': "Tayyorman 🚩",
-     'ru': 'Готов 🚩'}
+     'ru': 'Готов 🚩'},
+    {'uz': "Natijalarni jo'natish 📝",
+     'ru': "Отправить результаты 📝"}
 ]

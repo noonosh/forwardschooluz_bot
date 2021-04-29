@@ -60,9 +60,10 @@ def watch_video_markup(update, context):
 def placement_test_markup(update, context):
     menu = ReplyKeyboardMarkup(
         [
-            [QUIZ_START[lang(update)]],
+            [I_HAVE_KEY[lang(update)]],
             [BACK[lang(update)]]
-        ]
+        ],
+        resize_keyboard=True
     )
     update.effective_message.reply_text(ptm_text[lang(update)],
                                         reply_markup=menu,
@@ -75,7 +76,8 @@ def settings_markup(update, context):
         [
             [CHANGE_LANG[lang(update)]],
             [BACK[lang(update)]]
-        ]
+        ],
+        resize_keyboard=True
     )
     update.effective_message.reply_text(settings_markup_text[lang(update)],
                                         reply_markup=menu)
