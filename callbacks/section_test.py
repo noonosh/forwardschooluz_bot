@@ -176,8 +176,8 @@ def close_quiz(update, context: CallbackContext):
 
     quiz_taker_name = cursor.execute("SELECT name FROM Users WHERE telegram_id = '{}'"
                                      .format(user)).fetchone()[0]
-    quiz_taker_phone = '+' + cursor.execute("SELECT phone_number FROM Users WHERE telegram_id = '{}'"
-                                            .format(user)).fetchone()[0]
+    quiz_taker_phone = '+' + str(cursor.execute("SELECT phone_number FROM Users WHERE telegram_id = '{}'"
+                                                .format(user)).fetchone()[0])
 
     cursor.execute("""
     INSERT INTO QuizTakers (id, name, score) 
