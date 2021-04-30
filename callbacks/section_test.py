@@ -1,8 +1,8 @@
 import time
 from callbacks.static.texts import quiz_password_txt, text_quiz_instructions, quiz_finished_text, \
     quiz_thank_you
-from constants import MAIN_MENU, TEST_PROCESS, TEST_OVERVIEW_STATE, TEST_READY_STATE
-from user_settings import QUIZ_PASSWORD
+from constants import MAIN_MENU, TEST_PROCESS, TEST_READY_STATE
+from user_settings import QUIZ_PASSWORD, QUIZ_RESULTS_CHANNEL_ID
 from callbacks.mainpage import main_page
 from databases.select import lang
 from databases.database_connector import *
@@ -176,6 +176,8 @@ def close_quiz(update, context: CallbackContext):
 
     quiz_taker_name = cursor.execute("SELECT name FROM Users WHERE telegram_id = '{}'"
                                      .format(user)).fetchone()[0]
+    quiz_taker_phone = '+' + cursor.execute("SELECT phone_number FROM Users WHERE telegram_id = '{}'"
+                                            .format(user)).fetchone()[0]
 
     cursor.execute("""
     INSERT INTO QuizTakers (id, name, score) 
@@ -190,6 +192,7 @@ def close_quiz(update, context: CallbackContext):
     )
 
     text = quiz_finished_text[language]
+    results_text = "Name: {}\nPhone_number: {}\nScore: {}\nLevel: {}"
 
     if 0 < int(score) <= 15:
         context.bot.send_chat_action(chat_id=user,
@@ -199,6 +202,12 @@ def close_quiz(update, context: CallbackContext):
                                caption=text.format(score, "BEGINNER"),
                                reply_markup=markup,
                                parse_mode='HTML')
+
+        context.bot.send_message(chat_id=QUIZ_RESULTS_CHANNEL_ID,
+                                 text=results_text.format(quiz_taker_name,
+                                                          quiz_taker_phone,
+                                                          score,
+                                                          'BEGINNER'))
     elif 16 <= int(score) <= 24:
         context.bot.send_chat_action(chat_id=user,
                                      action=ChatAction.UPLOAD_PHOTO)
@@ -207,6 +216,12 @@ def close_quiz(update, context: CallbackContext):
                                caption=text.format(score, "ELEMENTARY"),
                                reply_markup=markup,
                                parse_mode='HTML')
+
+        context.bot.send_message(chat_id=QUIZ_RESULTS_CHANNEL_ID,
+                                 text=results_text.format(quiz_taker_name,
+                                                          quiz_taker_phone,
+                                                          score,
+                                                          'ELEMENTARY'))
     elif 25 <= int(score) <= 32:
         context.bot.send_chat_action(chat_id=user,
                                      action=ChatAction.UPLOAD_PHOTO)
@@ -215,6 +230,13 @@ def close_quiz(update, context: CallbackContext):
                                caption=text.format(score, "PRE-INTERMEDIATE"),
                                reply_markup=markup,
                                parse_mode='HTML')
+
+        context.bot.send_message(chat_id=QUIZ_RESULTS_CHANNEL_ID,
+                                 text=results_text.format(quiz_taker_name,
+                                                          quiz_taker_phone,
+                                                          score,
+                                                          'PRE_INTERMEDIATE'))
+
     elif 33 <= int(score) <= 39:
         context.bot.send_chat_action(chat_id=user,
                                      action=ChatAction.UPLOAD_PHOTO)
@@ -223,6 +245,12 @@ def close_quiz(update, context: CallbackContext):
                                caption=text.format(score, "INTERMEDIATE"),
                                reply_markup=markup,
                                parse_mode='HTML')
+
+        context.bot.send_message(chat_id=QUIZ_RESULTS_CHANNEL_ID,
+                                 text=results_text.format(quiz_taker_name,
+                                                          quiz_taker_phone,
+                                                          score,
+                                                          'INTERMEDIATE'))
     elif 40 <= int(score) <= 45:
         context.bot.send_chat_action(chat_id=user,
                                      action=ChatAction.UPLOAD_PHOTO)
@@ -231,6 +259,12 @@ def close_quiz(update, context: CallbackContext):
                                caption=text.format(score, "UPPER INTERMEDIATE"),
                                reply_markup=markup,
                                parse_mode='HTML')
+
+        context.bot.send_message(chat_id=QUIZ_RESULTS_CHANNEL_ID,
+                                 text=results_text.format(quiz_taker_name,
+                                                          quiz_taker_phone,
+                                                          score,
+                                                          'UPPER INTERMEDIATE'))
     else:
         context.bot.send_chat_action(chat_id=user,
                                      action=ChatAction.UPLOAD_PHOTO)
@@ -239,6 +273,12 @@ def close_quiz(update, context: CallbackContext):
                                caption=text.format(score, "ADVANCED"),
                                reply_markup=markup,
                                parse_mode='HTML')
+
+        context.bot.send_message(chat_id=QUIZ_RESULTS_CHANNEL_ID,
+                                 text=results_text.format(quiz_taker_name,
+                                                          quiz_taker_phone,
+                                                          score,
+                                                          'ADVANCED'))
 
 
 def completed_quiz(update, context: CallbackContext):
