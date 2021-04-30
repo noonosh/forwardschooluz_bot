@@ -11,6 +11,7 @@ from telegram import (ReplyKeyboardRemove, InlineKeyboardButton, InlineKeyboardM
 from telegram.ext import CallbackContext, ConversationHandler
 from callbacks.static.button_texts import READY, SUBMIT_QUIZ_RESULTS
 from callbacks.static.quiz_answers import *
+import random
 
 
 def test_key(update, context):
@@ -88,11 +89,12 @@ def check_poll_answer(update, context):
 
 def send_questions(update, context):
     if update.callback_query:
-        n = str(1)
+        array = random.sample(sorted(questions), 50)
+        n = array[0]
 
         """The very first question is sent from here."""
         msg = context.bot.send_poll(chat_id=update.effective_chat.id,
-                                    question=questions[n].format(n),
+                                    question=questions[n].format('1'),
                                     options=[
                                         options[n][0],
                                         options[n][1],
@@ -104,7 +106,8 @@ def send_questions(update, context):
                                     is_anonymous=False)
 
         payload = {
-            update.effective_chat.id: msg.poll.id
+            update.effective_chat.id: msg.poll.id,
+            "questions": array
         }
         context.user_data.update(payload)
         print(context.user_data)
@@ -116,7 +119,7 @@ def send_questions(update, context):
             if int(context.user_data['questions_answered'] + 1) < 50:
 
                 current = context.user_data['questions_answered'] + 1
-                next_queue = str(current + 1)
+                q_queue = context.user_data['questions'][current]
 
                 # Add the answered question to the counter
                 context.user_data.update(
@@ -132,15 +135,15 @@ def send_questions(update, context):
                     )
 
                 next_question = context.bot.send_poll(chat_id=context.user_data['user'],
-                                                      question=questions[next_queue].format(next_queue),
+                                                      question=questions[q_queue].format(str(current + 1)),
                                                       options=[
-                                                          options[next_queue][0],
-                                                          options[next_queue][1],
-                                                          options[next_queue][2],
-                                                          options[next_queue][3]
+                                                          options[q_queue][0],
+                                                          options[q_queue][1],
+                                                          options[q_queue][2],
+                                                          options[q_queue][3]
                                                       ],
                                                       type=Poll.QUIZ,
-                                                      correct_option_id=answers[next_queue],
+                                                      correct_option_id=answers[q_queue],
                                                       is_anonymous=False)
                 payload = {
                     context.user_data['user']: next_question.poll.id

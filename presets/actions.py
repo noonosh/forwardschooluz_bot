@@ -10,7 +10,8 @@ def send_action(action):
         def command_func(update, context, *args, **kwargs):
             context.bot.send_chat_action(chat_id=update.effective_message.chat_id, action=action)
             time.sleep(0.5)
-            return func(update, context,  *args, **kwargs)
+            return func(update, context, *args, **kwargs)
+
         return command_func
 
     return decorator
