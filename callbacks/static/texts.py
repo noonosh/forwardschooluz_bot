@@ -17,7 +17,7 @@ sms_text = {
 }
 
 code_sent = {
-    'uz': 'Siz tergan raqamga kod yuborildi. Ushani tering',
+    'uz': "Siz tergan raqamga kod yuborildi. O'sha raqamni tering",
     'ru': 'На данный номер был отправлен код. Пожалуйста введите его сюда'
 }
 
@@ -184,10 +184,10 @@ Batafsil ma'lumot uchun:
 
 🤩 Yangi imkoniyatlarni kashf etish vaqti keldi!
 
-😌 60 dan ortiq o‘quvchilar bu imkoniyatlar bilan muntazam foydalanib kelmoqda""",
+😌 60 dan ortiq o‘quvchilar bu imkoniyatlardan muntazam foydalanib kelmoqdalar""",
     'ru': """<b>Intensive 6+</b>
 
-✅ Для тех, кто начинает изучать английский язык.
+✅ Для тех, кто только начинает изучать английский язык.
 
 ⏰ Часота: 6 раз в неделю 
 ⏳ Длительность: 180 минут 
@@ -260,7 +260,7 @@ Batafsil ma'lumot uchun:
 ⏳ Длительность занятий: 90 минут
 🎒 Продолжительность курса: 3 месяца
 
-🥳 А еще вас ждут различные мероприятия а также дополнительные занятия (система 9-19)
+🥳 А еще вас ждут различные мероприятияб а также дополнительные занятия (система 9-19)
 
 🙌 Более 100 человек уже доверяют нам
 
@@ -277,7 +277,7 @@ ielts_txt = {
  Kurs haqida qo'shimcha ma'lumotni quyidagi raqamga qo'ng'iroq qilib bilib olishingiz mumkin. 
 📞 + 998 95 144 22 12 
 
-📑 Shuningdek, siz uchun oyiga 2 marta o'tkaziladi mock exam o‘tkaziladi.""",
+📑 Shuningdek, siz uchun oyiga 2 marta mock exam o‘tkaziladi.""",
     'ru': """<b>IELTS</b> 
 
 ✅Уроки проводятся по американской системе обучения (мировой стандарт)
