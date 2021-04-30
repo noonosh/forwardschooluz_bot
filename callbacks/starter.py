@@ -7,8 +7,9 @@ def start(update, context):
     user = update.message.chat
     full_name = update.message.from_user.full_name
     if user.id < 0:
-        update.message.reply_text("Бот активен!")
-        return RESPONSE_GROUP  # in GROUP
+        pass
+        # update.message.reply_text("Бот активен!")
+        # return RESPONSE_GROUP  # in GROUP
     elif user.id > 0:
         if len(select.select_all(update)) == 0:
             db.cursor.execute("""INSERT INTO Users (

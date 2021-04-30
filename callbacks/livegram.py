@@ -45,6 +45,7 @@ def forward(update, context):
     context.bot_data.update(payload)
 
     accept_request(update, context)
+    return I_HAVE_A_QUESTION
 
 
 def accept_request(update, context):
@@ -53,20 +54,22 @@ def accept_request(update, context):
         gotcha_texts[context.chat_data[chat_id]][lang(update)]
     )
     ask_me_markup(update, context)
-    return I_HAVE_A_QUESTION
 
 
 def reply_to_user(update, context):
     try:
-        response = update.message.text
-        reply_id = update.message.reply_to_message.message_id
-        user_id = context.bot_data[reply_id]
-        language = cursor.execute("SELECT language FROM Users WHERE telegram_id = '{}'"
-                                  .format(user_id)).fetchone()[0]
-        reply = txt_reply[language].format(response)
-        context.bot.send_message(chat_id=user_id,
-                                 text=reply,
-                                 parse_mode='HTML')
+        if update.message.reply_to_message:
+            response = update.message.text
+            reply_id = update.message.reply_to_message.message_id
+            user_id = context.bot_data[reply_id]
+            language = cursor.execute("SELECT language FROM Users WHERE telegram_id = '{}'"
+                                      .format(user_id)).fetchone()[0]
+            reply = txt_reply[language].format(response)
+            context.bot.send_message(chat_id=user_id,
+                                     text=reply,
+                                     parse_mode='HTML')
+        else:
+            pass
     except KeyError:
         context.bot.send_message(chat_id=update.effective_chat.id,
                                  text='На это ответить я не могу 😢\n'

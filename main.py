@@ -6,25 +6,23 @@ from telegram.ext import (
     MessageHandler,
     Filters,
     PollAnswerHandler,
+    PicklePersistence
 )
 from ptbcontrib.reply_to_message_filter import ReplyToMessageFilter
 
+from error_sender import error_handler
 from callbacks.mainpage import *
 from auth_configs import keys
 from callbacks import (registration, starter, kiosk, livegram, markups,
                        section_settings,
-                       section_test)
+                       section_test, videos)
 from constants import *
-import logging
 from callbacks.static.button_texts import *
-
-logging.basicConfig(level=logging.DEBUG,
-                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-logger = logging.getLogger(__name__)
 
 
 def main():
-    updater = Updater(token=keys.API_TOKEN, use_context=True)
+    persistence = PicklePersistence(filename='RESTRICTED')
+    updater = Updater(token=keys.API_TOKEN, persistence=persistence, use_context=True)
     dispatcher = updater.dispatcher
 
     registration_conversation = ConversationHandler(
@@ -72,9 +70,9 @@ def main():
                       MessageHandler(Filters.regex(SUBMIT_QUIZ_RESULTS['uz']) |
                                      Filters.regex(SUBMIT_QUIZ_RESULTS['ru']), section_test.completed_quiz)],
         states={
-            RESPONSE_GROUP: [
-                MessageHandler(ReplyToMessageFilter(Filters.user(1148622134)), livegram.reply_to_user)
-            ],
+            # RESPONSE_GROUP: [
+            #     MessageHandler(ReplyToMessageFilter(Filters.user(1148622134)), livegram.reply_to_user)
+            # ],
             REGISTRATION: [registration_conversation],
             MAIN_MENU: [
                 MessageHandler(Filters.regex(ASK_ME['uz']) |
@@ -134,8 +132,15 @@ def main():
                 MessageHandler(Filters.photo, kiosk.get_photo_id)
             ],
             I_WANT_TO_WATCH: [
+                MessageHandler(Filters.regex(VIDEO_1['uz']) |
+                               Filters.regex(VIDEO_1['ru']), videos.video_1),
+                MessageHandler(Filters.regex(VIDEO_2['uz']) |
+                               Filters.regex(VIDEO_2['ru']), videos.video_2),
+                MessageHandler(Filters.regex(VIDEO_3['uz']) |
+                               Filters.regex(VIDEO_3['ru']), videos.video_3),
                 MessageHandler(Filters.regex(BACK['uz']) |
-                               Filters.regex(BACK['ru']), back_to_main)
+                               Filters.regex(BACK['ru']), back_to_main),
+                MessageHandler(Filters.video, videos.get_video_id)
             ],
             I_WANT_A_TEST: [
                 MessageHandler(Filters.regex(I_HAVE_KEY['uz']) |
@@ -156,12 +161,15 @@ def main():
         fallbacks=[
             MessageHandler(Filters.all & (~ Filters.user(1148622134)), starter.reset),
             CommandHandler('reset', starter.reset)
-        ]
+        ],
+        persistent=True,
+        name='my_conversation'
     )
 
     dispatcher.add_handler(conversation_main)
     dispatcher.add_handler(quiz_conversation)
-    dispatcher.add_handler(MessageHandler(ReplyToMessageFilter(Filters.user(1148622134)), starter.group_authenticate))
+    dispatcher.add_handler(MessageHandler(ReplyToMessageFilter(Filters.user(1148622134)), livegram.reply_to_user))
+    dispatcher.add_error_handler(error_handler)
 
     updater.start_polling()
     updater.idle()
