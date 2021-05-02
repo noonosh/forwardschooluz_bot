@@ -118,4 +118,5 @@ dmypy.json
 .idea/
 .DS_Store
 
-/databases/database.sqlite
+databases/database.sqlite
+RESTRICTED
