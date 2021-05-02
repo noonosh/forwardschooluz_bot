@@ -160,7 +160,7 @@ def main():
         },
         fallbacks=[
             MessageHandler(Filters.all & (~ Filters.user(1148622134)), starter.reset),
-            CommandHandler('reset', starter.reset)
+            CommandHandler('reset', starter.start)
         ],
         persistent=True,
         name='my_conversation'
