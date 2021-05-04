@@ -11,6 +11,7 @@ from constants import (STATE_ADMIN_MENU,
                        CONFIRM_SENDING)
 from callbacks.mainpage import main_page
 from constants import ACTIVE_USER
+from user_settings import MASSMAIL_INTERVAL
 
 
 @restricted
@@ -229,13 +230,13 @@ def post_all(update, context):
                 if context.user_data['caption'] == 0:
                     context.bot.send_photo(chat_id=i[0],
                                            photo=open(f'storage/{photo}.jpg', 'rb'))
-                    time.sleep(0.05)
+                    time.sleep(MASSMAIL_INTERVAL)
 
                 else:
                     context.bot.send_photo(chat_id=i[0],
                                            photo=open(f'storage/{photo}.jpg', 'rb'),
                                            caption=context.user_data['caption'])
-                    time.sleep(0.05)
+                    time.sleep(MASSMAIL_INTERVAL)
 
             elif context.user_data["post"]["video"] != 0:
                 video = context.user_data['post']['video']
@@ -243,19 +244,19 @@ def post_all(update, context):
                 if context.user_data['caption'] == 0:
                     context.bot.send_video(chat_id=i[0],
                                            video=open(f'storage/{video}.mp4', 'rb'))
-                    time.sleep(0.05)
+                    time.sleep(MASSMAIL_INTERVAL)
 
                 else:
                     context.bot.send_video(chat_id=i[0],
                                            video=open(f'storage/{video}.mp4', 'rb'),
                                            caption=context.user_data['caption'])
-                    time.sleep(0.05)
+                    time.sleep(MASSMAIL_INTERVAL)
 
             elif context.user_data['caption'] != 0:
                 context.bot.send_message(chat_id=i[0],
                                          text=context.user_data['caption'])
-                time.sleep(0.05)
-        except error.BadRequest:
+                time.sleep(MASSMAIL_INTERVAL)
+        except error.BadRequest or error.Unauthorized:
             pass
 
     context.bot.send_message(chat_id=update.effective_user.id,
