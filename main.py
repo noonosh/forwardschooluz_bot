@@ -9,7 +9,7 @@ from telegram.ext import (
     PicklePersistence
 )
 from ptbcontrib.reply_to_message_filter import ReplyToMessageFilter
-
+from callbacks.massmailing import *
 from error_sender import error_handler
 from callbacks.mainpage import *
 from auth_configs import keys
@@ -63,6 +63,29 @@ def main():
         },
         fallbacks=[],
         per_chat=False
+    )
+
+    admin_conversation = ConversationHandler(
+        entry_points=[
+            CommandHandler('admin', admin_login)
+        ],
+        states={
+            STATE_ADMIN_MENU: [
+                MessageHandler(Filters.regex(ADD_PHOTO), get_media),
+                MessageHandler(Filters.regex(ADD_TEXT), echo_it),
+                MessageHandler(Filters.regex(PREVIEW_IT), preview_post),
+                MessageHandler(Filters.regex(SEND_ALL), echo_it),
+                MessageHandler(Filters.regex(EXIT_ADMIN), echo_it)
+            ],
+            STATE_GET_MEDIA: [
+                MessageHandler(Filters.photo | Filters.video, save_media),
+                MessageHandler(Filters.regex(GO_BACK), back_to_admin_main)
+            ]
+        },
+        fallbacks=[],
+        map_to_parent={},
+        persistent=True,
+        name='admin_conv'
     )
 
     conversation_main = ConversationHandler(
@@ -155,7 +178,8 @@ def main():
                 MessageHandler(Filters.regex(CHANGE_LANG['uz']) |
                                Filters.regex(CHANGE_LANG['ru']), section_settings.change_language),
                 MessageHandler(Filters.regex(BACK['uz']) |
-                               Filters.regex(BACK['ru']), back_to_main)
+                               Filters.regex(BACK['ru']), back_to_main),
+                admin_conversation
             ]
         },
         fallbacks=[
