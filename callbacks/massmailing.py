@@ -1,7 +1,7 @@
 import time
 from presets.actions import restricted
 from databases.database_connector import cursor
-from telegram import KeyboardButton, ReplyKeyboardMarkup, ReplyKeyboardRemove, ChatAction
+from telegram import KeyboardButton, ReplyKeyboardMarkup, ReplyKeyboardRemove, ChatAction, error
 from telegram.ext import CallbackContext
 from callbacks.static.admin_texts import *
 from constants import (STATE_ADMIN_MENU,
@@ -10,6 +10,7 @@ from constants import (STATE_ADMIN_MENU,
                        STATE_GET_TEXT,
                        CONFIRM_SENDING)
 from callbacks.mainpage import main_page
+from constants import ACTIVE_USER
 
 
 @restricted
@@ -216,42 +217,46 @@ def post_all(update, context):
     context.bot.send_message(chat_id=update.effective_user.id,
                              text='Начинаю рассылку...\n\nНе пользуйтесь ботом пока доставлю сообщения до всех!',
                              reply_markup=ReplyKeyboardRemove())
-    users_ids = cursor.execute("""SELECT telegram_id from Users
-    EXCEPT SELECT telegram_id FROM Users WHERE telegram_id = '{}'""".format(update.effective_user.id)).fetchall()
+    users_ids = cursor.execute("""SELECT telegram_id from Users WHERE status = '{}'
+    EXCEPT SELECT telegram_id FROM Users WHERE telegram_id = '{}'"""
+                               .format(ACTIVE_USER, update.effective_user.id)).fetchall()
 
     for i in users_ids:
-        if context.user_data["post"]["photo"] != 0:
-            photo = context.user_data['post']['photo']
+        try:
+            if context.user_data["post"]["photo"] != 0:
+                photo = context.user_data['post']['photo']
 
-            if context.user_data['caption'] == 0:
-                context.bot.send_photo(chat_id=i[0],
-                                       photo=open(f'storage/{photo}.jpg', 'rb'))
+                if context.user_data['caption'] == 0:
+                    context.bot.send_photo(chat_id=i[0],
+                                           photo=open(f'storage/{photo}.jpg', 'rb'))
+                    time.sleep(0.05)
+
+                else:
+                    context.bot.send_photo(chat_id=i[0],
+                                           photo=open(f'storage/{photo}.jpg', 'rb'),
+                                           caption=context.user_data['caption'])
+                    time.sleep(0.05)
+
+            elif context.user_data["post"]["video"] != 0:
+                video = context.user_data['post']['video']
+
+                if context.user_data['caption'] == 0:
+                    context.bot.send_video(chat_id=i[0],
+                                           video=open(f'storage/{video}.mp4', 'rb'))
+                    time.sleep(0.05)
+
+                else:
+                    context.bot.send_video(chat_id=i[0],
+                                           video=open(f'storage/{video}.mp4', 'rb'),
+                                           caption=context.user_data['caption'])
+                    time.sleep(0.05)
+
+            elif context.user_data['caption'] != 0:
+                context.bot.send_message(chat_id=i[0],
+                                         text=context.user_data['caption'])
                 time.sleep(0.05)
-
-            else:
-                context.bot.send_photo(chat_id=i[0],
-                                       photo=open(f'storage/{photo}.jpg', 'rb'),
-                                       caption=context.user_data['caption'])
-                time.sleep(0.05)
-
-        elif context.user_data["post"]["video"] != 0:
-            video = context.user_data['post']['video']
-
-            if context.user_data['caption'] == 0:
-                context.bot.send_video(chat_id=i[0],
-                                       video=open(f'storage/{video}.mp4', 'rb'))
-                time.sleep(0.05)
-
-            else:
-                context.bot.send_video(chat_id=i[0],
-                                       video=open(f'storage/{video}.mp4', 'rb'),
-                                       caption=context.user_data['caption'])
-                time.sleep(0.05)
-
-        elif context.user_data['caption'] != 0:
-            context.bot.send_message(chat_id=i[0],
-                                     text=context.user_data['caption'])
-            time.sleep(0.05)
+        except error.BadRequest:
+            pass
 
     context.bot.send_message(chat_id=update.effective_user.id,
                              text='Рассылка была успешно доставлена всем!')
