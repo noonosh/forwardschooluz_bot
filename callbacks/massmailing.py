@@ -221,6 +221,7 @@ def post_all(update, context):
     users_ids = cursor.execute("""SELECT telegram_id from Users WHERE status = '{}'
     EXCEPT SELECT telegram_id FROM Users WHERE telegram_id = '{}'"""
                                .format(ACTIVE_USER, update.effective_user.id)).fetchall()
+    count = len(users_ids)
 
     for i in users_ids:
         try:
@@ -263,7 +264,7 @@ def post_all(update, context):
             continue
 
     context.bot.send_message(chat_id=update.effective_user.id,
-                             text='Рассылка была успешно доставлена всем!')
+                             text='Рассылка была успешно доставлена всем {} человек!'.format(count))
     main_page(update, context)
     return BECOME_USER
 
