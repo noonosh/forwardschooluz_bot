@@ -256,8 +256,8 @@ def post_all(update, context):
                 context.bot.send_message(chat_id=i[0],
                                          text=context.user_data['caption'])
                 time.sleep(MASSMAIL_INTERVAL)
-        except error.BadRequest or error.Unauthorized:
-            pass
+        except error.Unauthorized or error.BadRequest:
+            continue
 
     context.bot.send_message(chat_id=update.effective_user.id,
                              text='Рассылка была успешно доставлена всем!')
