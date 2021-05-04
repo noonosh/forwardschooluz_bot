@@ -224,39 +224,42 @@ def post_all(update, context):
 
     for i in users_ids:
         try:
-            if context.user_data["post"]["photo"] != 0:
-                photo = context.user_data['post']['photo']
+            try:
+                if context.user_data["post"]["photo"] != 0:
+                    photo = context.user_data['post']['photo']
 
-                if context.user_data['caption'] == 0:
-                    context.bot.send_photo(chat_id=i[0],
-                                           photo=open(f'storage/{photo}.jpg', 'rb'))
+                    if context.user_data['caption'] == 0:
+                        context.bot.send_photo(chat_id=i[0],
+                                               photo=open(f'storage/{photo}.jpg', 'rb'))
+                        time.sleep(MASSMAIL_INTERVAL)
+
+                    else:
+                        context.bot.send_photo(chat_id=i[0],
+                                               photo=open(f'storage/{photo}.jpg', 'rb'),
+                                               caption=context.user_data['caption'])
+                        time.sleep(MASSMAIL_INTERVAL)
+
+                elif context.user_data["post"]["video"] != 0:
+                    video = context.user_data['post']['video']
+
+                    if context.user_data['caption'] == 0:
+                        context.bot.send_video(chat_id=i[0],
+                                               video=open(f'storage/{video}.mp4', 'rb'))
+                        time.sleep(MASSMAIL_INTERVAL)
+
+                    else:
+                        context.bot.send_video(chat_id=i[0],
+                                               video=open(f'storage/{video}.mp4', 'rb'),
+                                               caption=context.user_data['caption'])
+                        time.sleep(MASSMAIL_INTERVAL)
+
+                elif context.user_data['caption'] != 0:
+                    context.bot.send_message(chat_id=i[0],
+                                             text=context.user_data['caption'])
                     time.sleep(MASSMAIL_INTERVAL)
-
-                else:
-                    context.bot.send_photo(chat_id=i[0],
-                                           photo=open(f'storage/{photo}.jpg', 'rb'),
-                                           caption=context.user_data['caption'])
-                    time.sleep(MASSMAIL_INTERVAL)
-
-            elif context.user_data["post"]["video"] != 0:
-                video = context.user_data['post']['video']
-
-                if context.user_data['caption'] == 0:
-                    context.bot.send_video(chat_id=i[0],
-                                           video=open(f'storage/{video}.mp4', 'rb'))
-                    time.sleep(MASSMAIL_INTERVAL)
-
-                else:
-                    context.bot.send_video(chat_id=i[0],
-                                           video=open(f'storage/{video}.mp4', 'rb'),
-                                           caption=context.user_data['caption'])
-                    time.sleep(MASSMAIL_INTERVAL)
-
-            elif context.user_data['caption'] != 0:
-                context.bot.send_message(chat_id=i[0],
-                                         text=context.user_data['caption'])
-                time.sleep(MASSMAIL_INTERVAL)
-        except error.Unauthorized or error.BadRequest:
+            except error.Unauthorized:
+                continue
+        except error.BadRequest:
             continue
 
     context.bot.send_message(chat_id=update.effective_user.id,
