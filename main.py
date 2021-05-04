@@ -9,7 +9,7 @@ from telegram.ext import (
     PicklePersistence
 )
 from ptbcontrib.reply_to_message_filter import ReplyToMessageFilter
-
+from callbacks.massmailing import *
 from error_sender import error_handler
 from callbacks.mainpage import *
 from auth_configs import keys
@@ -65,14 +65,47 @@ def main():
         per_chat=False
     )
 
+    admin_conversation = ConversationHandler(
+        entry_points=[
+            CommandHandler('admin', admin_login)
+        ],
+        states={
+            STATE_ADMIN_MENU: [
+                MessageHandler(Filters.regex(ADD_MEDIA), get_media),
+                MessageHandler(Filters.regex(ADD_TEXT), get_text),
+                MessageHandler(Filters.regex(PREVIEW_IT), preview_post),
+                MessageHandler(Filters.regex(DELETE_ALL), clear_post),
+                MessageHandler(Filters.regex(SEND_ALL), confirm_post),
+                MessageHandler(Filters.regex(EXIT_ADMIN), quit_admin_panel)
+            ],
+            STATE_GET_MEDIA: [
+                MessageHandler(Filters.photo | Filters.video, save_media),
+                MessageHandler(Filters.regex(GO_BACK), back_to_admin_main)
+            ],
+            STATE_GET_TEXT: [
+                MessageHandler(Filters.regex(GO_BACK), back_to_admin_main),
+                MessageHandler(Filters.text, save_text)
+            ],
+            CONFIRM_SENDING: [
+                MessageHandler(Filters.regex(YES_SEND), post_all),
+                MessageHandler(Filters.regex(NOT_DONT_SEND), back_to_admin_main)
+            ]
+        },
+        fallbacks=[
+            MessageHandler(Filters.all, ignore)
+        ],
+        map_to_parent={
+            BECOME_USER: MAIN_MENU
+        },
+        persistent=True,
+        name='admin-conversation'
+    )
+
     conversation_main = ConversationHandler(
         entry_points=[CommandHandler('start', starter.start),
                       MessageHandler(Filters.regex(SUBMIT_QUIZ_RESULTS['uz']) |
                                      Filters.regex(SUBMIT_QUIZ_RESULTS['ru']), section_test.completed_quiz)],
         states={
-            # RESPONSE_GROUP: [
-            #     MessageHandler(ReplyToMessageFilter(Filters.user(1148622134)), livegram.reply_to_user)
-            # ],
             REGISTRATION: [registration_conversation],
             MAIN_MENU: [
                 MessageHandler(Filters.regex(ASK_ME['uz']) |
@@ -155,7 +188,8 @@ def main():
                 MessageHandler(Filters.regex(CHANGE_LANG['uz']) |
                                Filters.regex(CHANGE_LANG['ru']), section_settings.change_language),
                 MessageHandler(Filters.regex(BACK['uz']) |
-                               Filters.regex(BACK['ru']), back_to_main)
+                               Filters.regex(BACK['ru']), back_to_main),
+                admin_conversation
             ]
         },
         fallbacks=[

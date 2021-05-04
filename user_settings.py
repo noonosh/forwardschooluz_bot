@@ -1,7 +1,8 @@
-import random
-import string
 
-ADMIN_IDS = [361516746]
+# Nuriddin Islamov, Abduvali Jalilov
+ADMIN_IDS = [361516746, 786287148]
+# a = cursor.execute("SELECT * FROM Admins WHERE telegram_id = '{}'").fetchall()
+
 DEVELOPER_CHAT_ID = 361516746
 
 # QUIZ_PASSWORD = ''.join(random.choices(string.ascii_lowercase + string.ascii_uppercase + string.digits, k=5))

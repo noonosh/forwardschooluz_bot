@@ -19,8 +19,13 @@ n = 9
  REG_END,
  TEST_READY_STATE,
  TEST_PROCESS,
- TEST_OVERVIEW_STATE
- ) = range(n, n + 8)
+ TEST_OVERVIEW_STATE,
+ STATE_ADMIN_MENU,
+ STATE_GET_MEDIA,
+ BECOME_USER,
+ STATE_GET_TEXT,
+ CONFIRM_SENDING
+ ) = range(n, n + 13)
 
 
 # States of the user defined below
