@@ -120,3 +120,6 @@ dmypy.json
 
 databases/database.sqlite
 RESTRICTED
+
+
+storage/
