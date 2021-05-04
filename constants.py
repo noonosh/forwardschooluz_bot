@@ -21,8 +21,11 @@ n = 9
  TEST_PROCESS,
  TEST_OVERVIEW_STATE,
  STATE_ADMIN_MENU,
- STATE_GET_MEDIA
- ) = range(n, n + 10)
+ STATE_GET_MEDIA,
+ BECOME_USER,
+ STATE_GET_TEXT,
+ CONFIRM_SENDING
+ ) = range(n, n + 13)
 
 
 # States of the user defined below

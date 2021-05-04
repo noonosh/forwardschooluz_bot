@@ -71,21 +71,34 @@ def main():
         ],
         states={
             STATE_ADMIN_MENU: [
-                MessageHandler(Filters.regex(ADD_PHOTO), get_media),
-                MessageHandler(Filters.regex(ADD_TEXT), echo_it),
+                MessageHandler(Filters.regex(ADD_MEDIA), get_media),
+                MessageHandler(Filters.regex(ADD_TEXT), get_text),
                 MessageHandler(Filters.regex(PREVIEW_IT), preview_post),
-                MessageHandler(Filters.regex(SEND_ALL), echo_it),
-                MessageHandler(Filters.regex(EXIT_ADMIN), echo_it)
+                MessageHandler(Filters.regex(DELETE_ALL), clear_post),
+                MessageHandler(Filters.regex(SEND_ALL), confirm_post),
+                MessageHandler(Filters.regex(EXIT_ADMIN), quit_admin_panel)
             ],
             STATE_GET_MEDIA: [
                 MessageHandler(Filters.photo | Filters.video, save_media),
                 MessageHandler(Filters.regex(GO_BACK), back_to_admin_main)
+            ],
+            STATE_GET_TEXT: [
+                MessageHandler(Filters.regex(GO_BACK), back_to_admin_main),
+                MessageHandler(Filters.text, save_text)
+            ],
+            CONFIRM_SENDING: [
+                MessageHandler(Filters.regex(YES_SEND), post_all),
+                MessageHandler(Filters.regex(NOT_DONT_SEND), back_to_admin_main)
             ]
         },
-        fallbacks=[],
-        map_to_parent={},
+        fallbacks=[
+            MessageHandler(Filters.all, ignore)
+        ],
+        map_to_parent={
+            BECOME_USER: MAIN_MENU
+        },
         persistent=True,
-        name='admin_conv'
+        name='admin-conversation'
     )
 
     conversation_main = ConversationHandler(
@@ -93,9 +106,6 @@ def main():
                       MessageHandler(Filters.regex(SUBMIT_QUIZ_RESULTS['uz']) |
                                      Filters.regex(SUBMIT_QUIZ_RESULTS['ru']), section_test.completed_quiz)],
         states={
-            # RESPONSE_GROUP: [
-            #     MessageHandler(ReplyToMessageFilter(Filters.user(1148622134)), livegram.reply_to_user)
-            # ],
             REGISTRATION: [registration_conversation],
             MAIN_MENU: [
                 MessageHandler(Filters.regex(ASK_ME['uz']) |
