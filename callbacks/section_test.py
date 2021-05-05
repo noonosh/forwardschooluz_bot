@@ -183,10 +183,10 @@ def close_quiz(update, context: CallbackContext):
     quiz_taker_phone = '+' + str(cursor.execute("SELECT phone_number FROM Users WHERE telegram_id = '{}'"
                                                 .format(user)).fetchone()[0])
 
-    # cursor.execute("""
-    # INSERT INTO QuizTakers (id, name, score)
-    # VALUES ('{}', '{}', '{}')""".format(user, quiz_taker_name, score))
-    # conn.commit()
+    cursor.execute("""
+    INSERT INTO QuizTakers (id, name, score)
+    VALUES ('{}', '{}', '{}')""".format(user, quiz_taker_name, score))
+    conn.commit()
 
     markup = ReplyKeyboardMarkup(
         [
