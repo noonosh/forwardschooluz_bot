@@ -57,12 +57,7 @@ def quiz_getting_started(update, context):
     context.user_data.update(payload)
 
     send_questions(update, context)
-    # quiz_timer(update, context)
     return TEST_PROCESS
-
-
-# def quiz_timer(update, context: CallbackContext):
-#     context.job_queue.run_repeating(send_question, interval=31, first=0.1, context=context.user_data)
 
 
 def check_poll_answer(update, context):
@@ -116,18 +111,21 @@ def send_questions(update, context):
 
         if context.user_data[context.user_data['user']] == update.poll_answer.poll_id:
 
-            if int(context.user_data['questions_answered'] + 1) < 50:
+            if context.user_data['questions_answered'] + 1 < 50:
 
-                current = context.user_data['questions_answered'] + 1
-                q_queue = context.user_data['questions'][current]
+                current_q = context.user_data['questions'][context.user_data['questions_answered']]
+
+                answered = context.user_data['questions_answered'] + 1
+                q_queue = context.user_data['questions'][answered]
 
                 # Add the answered question to the counter
                 context.user_data.update(
                     {
-                        'questions_answered': current
+                        'questions_answered': answered
                     }
                 )
-                if str(update.poll_answer.option_ids[0]) == answers[str(current)]:
+
+                if str(update.poll_answer.option_ids[0]) == answers[str(current_q)]:
                     context.user_data.update(
                         {
                             'correct_answers': context.user_data['correct_answers'] + 1
@@ -135,7 +133,7 @@ def send_questions(update, context):
                     )
 
                 next_question = context.bot.send_poll(chat_id=context.user_data['user'],
-                                                      question=questions[q_queue].format(str(current + 1)),
+                                                      question=questions[q_queue].format(str(answered + 1)),
                                                       options=[
                                                           options[q_queue][0],
                                                           options[q_queue][1],
@@ -145,6 +143,9 @@ def send_questions(update, context):
                                                       type=Poll.QUIZ,
                                                       correct_option_id=answers[q_queue],
                                                       is_anonymous=False)
+
+                print(context.user_data)
+
                 payload = {
                     context.user_data['user']: next_question.poll.id
                 }
@@ -182,10 +183,10 @@ def close_quiz(update, context: CallbackContext):
     quiz_taker_phone = '+' + str(cursor.execute("SELECT phone_number FROM Users WHERE telegram_id = '{}'"
                                                 .format(user)).fetchone()[0])
 
-    cursor.execute("""
-    INSERT INTO QuizTakers (id, name, score) 
-    VALUES ('{}', '{}', '{}')""".format(user, quiz_taker_name, score))
-    conn.commit()
+    # cursor.execute("""
+    # INSERT INTO QuizTakers (id, name, score)
+    # VALUES ('{}', '{}', '{}')""".format(user, quiz_taker_name, score))
+    # conn.commit()
 
     markup = ReplyKeyboardMarkup(
         [

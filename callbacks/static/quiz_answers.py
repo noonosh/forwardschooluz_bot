@@ -6,7 +6,7 @@ questions = {
     '4': '[{}/50] My brother is ____________ artist.',
     '5': '[{}/50] ____________ 20 desks in the classroom.',
     '6': '[{}/50] Paul ____________ romantic films.',
-    '7': "[{}/50] Sorry, I can't talk. I ____________ busy now.",
+    '7': "[{}/50] Sorry, I can't talk. I ____________ now.",
     '8': '[{}/50] She ____________ at school last week.',
     '9': "[{}/50] I ____________ the film last week.",
     '10': "[{}/50] ____________ a piece of cake? No, thank you.",
