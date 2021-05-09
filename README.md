@@ -9,3 +9,5 @@ This bot can:
 - Provide all its features in two languages (you can configure yours in the settings menu)
 
 🔗 Link to the project ([Telegram Bot](https://t.me/forwardschooluz_bot))
+
+Author: Nuriddin Islamov
