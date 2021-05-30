@@ -108,12 +108,11 @@ def send_questions(update, context):
         print(context.user_data)
 
     elif update.poll_answer:
+        current_q = context.user_data['questions'][context.user_data['questions_answered']]
 
         if context.user_data[context.user_data['user']] == update.poll_answer.poll_id:
 
             if context.user_data['questions_answered'] + 1 < 50:
-
-                current_q = context.user_data['questions'][context.user_data['questions_answered']]
 
                 answered = context.user_data['questions_answered'] + 1
                 q_queue = context.user_data['questions'][answered]
@@ -158,7 +157,7 @@ def send_questions(update, context):
                         'questions_answered': current
                     }
                 )
-                if str(update.poll_answer.option_ids[0]) == answers[str(current)]:
+                if str(update.poll_answer.option_ids[0]) == answers[str(current_q)]:
                     context.user_data.update(
                         {
                             'correct_answers': context.user_data['correct_answers'] + 1
