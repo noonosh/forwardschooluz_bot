@@ -1,0 +1,3 @@
+python-telegram-bot==13.4
+requests=="*"
+ptbcontrib=={git = "https://github.com/python-telegram-bot/ptbcontrib.git"}

@@ -10,6 +10,8 @@ mysql-connector-python = "*"
 ujson = "*"
 install = "*"
 pip = "*"
+ptbcontrib = {git = "https://github.com/python-telegram-bot/ptbcontrib.git"}
+pandas = "*"
 
 [dev-packages]
 
