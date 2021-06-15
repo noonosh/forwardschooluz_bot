@@ -1,6 +1,6 @@
 import time
 from presets.actions import restricted
-from databases.database_connector import cursor
+from databases.database_connector import cursor, conn
 from telegram import KeyboardButton, ReplyKeyboardMarkup, ReplyKeyboardRemove, ChatAction, error
 from telegram.ext import CallbackContext
 from callbacks.static.admin_texts import *
@@ -12,6 +12,8 @@ from constants import (STATE_ADMIN_MENU,
 from callbacks.mainpage import main_page
 from constants import ACTIVE_USER
 from user_settings import MASSMAIL_INTERVAL
+import pandas as pd
+import datetime
 
 
 @restricted
@@ -34,6 +36,14 @@ def admin_login(update, context: CallbackContext):
 
     admin_menu(update, context)
     return STATE_ADMIN_MENU
+
+
+def export_users(update, context):
+    user_id = update.effective_user.id
+    db_df = pd.read_sql_query("SELECT * FROM users", conn)
+    db_df.to_csv(f'exports/export_{datetime.date.today()}.csv')
+    context.bot.send_document(chat_id=user_id,
+                              document=open(f'exports/export_{datetime.date.today()}.csv'))
 
 
 def admin_menu(update, context):
@@ -122,7 +132,8 @@ def preview_post(update, context):
 
             else:
                 context.bot.send_photo(chat_id=chat_id,
-                                       photo=open(f'storage/{photo}.jpg', 'rb'),
+                                       photo=open(
+                                           f'storage/{photo}.jpg', 'rb'),
                                        caption=context.user_data['caption'])
 
         elif context.user_data["post"]["video"] != 0:
@@ -137,7 +148,8 @@ def preview_post(update, context):
 
             else:
                 context.bot.send_video(chat_id=chat_id,
-                                       video=open(f'storage/{video}.mp4', 'rb'),
+                                       video=open(
+                                           f'storage/{video}.mp4', 'rb'),
                                        caption=context.user_data['caption'])
 
         elif context.user_data['caption'] != 0:
@@ -236,7 +248,8 @@ def post_all(update, context):
 
                     else:
                         context.bot.send_photo(chat_id=i[0],
-                                               photo=open(f'storage/{photo}.jpg', 'rb'),
+                                               photo=open(
+                                                   f'storage/{photo}.jpg', 'rb'),
                                                caption=context.user_data['caption'])
                         time.sleep(MASSMAIL_INTERVAL)
 
@@ -250,7 +263,8 @@ def post_all(update, context):
 
                     else:
                         context.bot.send_video(chat_id=i[0],
-                                               video=open(f'storage/{video}.mp4', 'rb'),
+                                               video=open(
+                                                   f'storage/{video}.mp4', 'rb'),
                                                caption=context.user_data['caption'])
                         time.sleep(MASSMAIL_INTERVAL)
 

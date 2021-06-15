@@ -22,16 +22,19 @@ from callbacks.static.button_texts import *
 
 def main():
     persistence = PicklePersistence(filename='RESTRICTED')
-    updater = Updater(token=keys.API_TOKEN, persistence=persistence, use_context=True)
+    updater = Updater(token=keys.API_TOKEN,
+                      persistence=persistence, use_context=True)
     dispatcher = updater.dispatcher
 
     registration_conversation = ConversationHandler(
         entry_points=[CallbackQueryHandler(pattern='uz', callback=registration.greet_user),
-                      CallbackQueryHandler(pattern='ru', callback=registration.greet_user),
+                      CallbackQueryHandler(
+                          pattern='ru', callback=registration.greet_user),
                       MessageHandler(Filters.text, registration.greet_user)],
         states={
             PHONE_CONFIRMATION: [
-                MessageHandler(Filters.contact | Filters.text, registration.check_phone)
+                MessageHandler(Filters.contact | Filters.text,
+                               registration.check_phone)
             ],
             PHONE_CODE: [
                 MessageHandler(Filters.regex('^' + RESEND_CODE['uz'] + '$') |
@@ -55,7 +58,8 @@ def main():
     )
 
     quiz_conversation = ConversationHandler(
-        entry_points=[CallbackQueryHandler(section_test.quiz_getting_started, pattern='start_that_quiz')],
+        entry_points=[CallbackQueryHandler(
+            section_test.quiz_getting_started, pattern='start_that_quiz')],
         states={
             TEST_PROCESS: [
                 PollAnswerHandler(section_test.send_questions)
@@ -76,7 +80,8 @@ def main():
                 MessageHandler(Filters.regex(PREVIEW_IT), preview_post),
                 MessageHandler(Filters.regex(DELETE_ALL), clear_post),
                 MessageHandler(Filters.regex(SEND_ALL), confirm_post),
-                MessageHandler(Filters.regex(EXIT_ADMIN), quit_admin_panel)
+                MessageHandler(Filters.regex(EXIT_ADMIN), quit_admin_panel),
+                CommandHandler('download', export_users)
             ],
             STATE_GET_MEDIA: [
                 MessageHandler(Filters.photo | Filters.video, save_media),
@@ -88,7 +93,8 @@ def main():
             ],
             CONFIRM_SENDING: [
                 MessageHandler(Filters.regex(YES_SEND), post_all),
-                MessageHandler(Filters.regex(NOT_DONT_SEND), back_to_admin_main)
+                MessageHandler(Filters.regex(
+                    NOT_DONT_SEND), back_to_admin_main)
             ]
         },
         fallbacks=[
@@ -193,7 +199,8 @@ def main():
             ]
         },
         fallbacks=[
-            MessageHandler(Filters.all & (~ Filters.user(1148622134)), starter.reset),
+            MessageHandler(Filters.all & (
+                ~ Filters.user(1148622134)), starter.reset),
             CommandHandler('reset', starter.start)
         ],
         persistent=True,
@@ -202,7 +209,8 @@ def main():
 
     dispatcher.add_handler(conversation_main)
     dispatcher.add_handler(quiz_conversation)
-    dispatcher.add_handler(MessageHandler(ReplyToMessageFilter(Filters.user(1148622134)), livegram.reply_to_user))
+    dispatcher.add_handler(MessageHandler(ReplyToMessageFilter(
+        Filters.user(1148622134)), livegram.reply_to_user))
     dispatcher.add_error_handler(error_handler)
 
     updater.start_polling()
